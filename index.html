@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ailexity Interns Group Status Tracker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #000000;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+            overflow: hidden;
+            margin: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+            opacity: 0.5;
+            z-index: 1;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -1px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.8;
+            font-weight: 400;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            color: #ffffff;
+            border: 1px solid #333333;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+            border-color: #666666;
+            transform: translateY(-2px);
+        }
+
+        .last-saved {
+            text-align: center;
+            color: #999999;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .spreadsheet {
+            padding: 30px;
+            background: #0a0a0a;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #000000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        
+        th {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 1px solid #333333;
+            padding: 16px 12px;
+            text-align: center;
+            font-weight: 600;
+            color: #ffffff;
+            font-size: 14px;
+            position: relative;
+        }
+        
+        th::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            opacity: 0.3;
+        }
+        
+        td {
+            border: 1px solid #222222;
+            padding: 12px;
+            text-align: center;
+            position: relative;
+            background: #000000;
+            transition: all 0.2s ease;
+        }
+        
+        td:hover {
+            background: #111111;
+        }
+        
+        .member-name {
+            background: #0f0f0f !important;
+            font-weight: 500;
+            text-align: left;
+            padding-left: 16px;
+            color: #ffffff;
+            border-left: 3px solid #333333;
+        }
+        
+        .member-name:hover {
+            background: #1a1a1a !important;
+            border-left-color: #666666;
+        }
+        
+        .group-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%) !important;
+            font-weight: 700;
+            color: #ffffff;
+            text-align: left;
+            padding-left: 16px;
+            border-left: 4px solid #ffffff;
+            font-size: 16px;
+            position: relative;
+        }
+        
+        .group-header:hover {
+            background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%) !important;
+        }
+
+        .project-info {
+            font-size: 12px;
+            color: #cccccc;
+            font-weight: 400;
+            margin-top: 4px;
+        }
+        
+        .status-cell {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 8px;
+            margin: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 12px;
+        }
+        
+        .status-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(255,255,255,0.1);
+        }
+        
+        .complete {
+            background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+            color: #000000;
+            border: 2px solid #ffffff;
+        }
+        
+        .incomplete {
+            background: linear-gradient(135deg, #333333 0%, #1a1a1a 100%);
+            color: #ffffff;
+            border: 2px solid #666666;
+        }
+        
+        .checkbox {
+            display: none;
+        }
+        
+        .checkbox-label {
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            height: 100%;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .legend {
+            margin: 30px 0;
+            padding: 25px;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            border-radius: 16px;
+            border: 1px solid #333333;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .legend::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            opacity: 0.3;
+        }
+        
+        .legend h3 {
+            margin: 0 0 15px 0;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .legend p {
+            color: #cccccc;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .legend-item {
+            display: inline-block;
+            margin-right: 20px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .legend-complete {
+            background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+            color: #000000;
+            border: 2px solid #ffffff;
+        }
+        
+        .legend-incomplete {
+            background: linear-gradient(135deg, #333333 0%, #1a1a1a 100%);
+            color: #ffffff;
+            border: 2px solid #666666;
+        }
+        
+        .stats {
+            margin: 30px 0;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            border: 1px solid #333333;
+            border-radius: 16px;
+            padding: 25px;
+            min-width: 140px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #333333, #ffffff, #333333);
+            opacity: 0.5;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255,255,255,0.1);
+            border-color: #666666;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #999999;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        
+        .leader-name {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%) !important;
+            color: #ffffff !important;
+            border-left: 4px solid #ffffff !important;
+            font-weight: 600 !important;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;  
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0f0f0f;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #333333;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555555;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 12px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .spreadsheet {
+                padding: 15px;
+                overflow-x: auto;
+            }
+            
+            .stats {
+                gap: 10px;
+            }
+            
+            .stat-card {
+                min-width: 120px;
+                padding: 20px;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="logo-text">AILEXITY</div>
+                <h1>Interns Group Status Tracker</h1>
+                <p>Click on any status cell to toggle between Complete/Incomplete</p>
+            </div>
+        </div>
+        
+        <div class="spreadsheet">
+            <div class="controls">
+                <button class="control-btn" onclick="resetAllData()">🔄 Reset All Data</button>
+                <button class="control-btn" onclick="exportData()">📥 Export Data</button>
+                <button class="control-btn" onclick="document.getElementById('importFile').click()">📤 Import Data</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(this)">
+            </div>
+            
+            <div class="last-saved" id="lastSaved">Data auto-saves on every change</div>
+            
+            <div class="stats" id="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalTasks">125</div>
+                    <div class="stat-label">Total Tasks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedTasks">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completionRate">0%</div>
+                    <div class="stat-label">Completion Rate</div>
+                </div>
+            </div>
+            
+            <table id="statusTable">
+                <thead>
+                    <tr>
+                        <th style="min-width: 200px;">Group / Member</th>
+                        <th>Phase 1<br><small>Planning & Setup</small></th>
+                        <th>Phase 2<br><small>Research & Analysis</small></th>
+                        <th>Phase 3<br><small>Develpment</small></th>
+                        <th>Phase 4<br><small>Testing</small></th>
+                        <th>Phase 5<br><small>Deployment</small></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td class="group-header">
+                            Team Mark Zukerberg
+                            <div class="project-info">Project:Ordering and billing system for Hotels/Grocery</div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="member-name leader-name">👑Alok Nikam</td>
+                        <td class="status-cell incomplete" data-id="alok-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                            
+                        </td>
+                        <td class="status-cell incomplete" data-id="alok-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                            
+                        </td>
+                        <td class="status-cell incomplete" data-id="alok-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                            
+                        </td>
+                        <td class="status-cell incomplete" data-id="alok-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                            
+                        </td>
+                        <td class="status-cell incomplete" data-id="alok-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="member-name">👤 Eshan Bhange(Group Leader) </td>
+                        <td class="status-cell incomplete" data-id="Eshan-task1" onclick="toggleStatus(this)">
+                           
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="Eshan-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="Eshan-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="Eshan-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="Eshan-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="member-name">👤 Anurag Bodkhe</td>
+                        <td class="status-cell incomplete" data-id="anurag-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="anurag-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="anurag-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="anurag-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="anurag-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="member-name">👤 Neel Kalsheety</td>
+                        <td class="status-cell incomplete" data-id="neel-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="neel-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="neel-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="neel-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="neel-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="member-name">👤 Khushi </td>
+                        <td class="status-cell incomplete" data-id="khushi-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="khushi-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="khushi-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="khushi-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="khushi-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="group-header">
+                            Team Bill Gates
+                            <div class="project-info">Project:Learning Management System (LMS)</div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="member-name leader-name">👑 Aditya Pawade</td>
+                        <td class="status-cell incomplete" data-id="aditya-task1" onclick="toggleStatus(this)">
+                             <div class="task-description">Observe team progress, review project scope & requirements</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="aditya-task2" onclick="toggleStatus(this)">
+                            <div class="task-description">Monitor research quality, validate findings</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="aditya-task3" onclick="toggleStatus(this)">
+                            <div class="task-description">Track development milestones, code reviews</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="aditya-task4" onclick="toggleStatus(this)">
+                            <div class="task-description">Supervise testing procedures, quality assurance</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="aditya-task5" onclick="toggleStatus(this)">
+                            <div class="task-description">Review documentation, oversee deployment</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="member-name">👤 Atharva Borate(Group Leader)</td>
+                        <td class="status-cell incomplete" data-id="atharva-task1" onclick="toggleStatus(this)">
+                           <!-- <label class="checkbox-label">Not Complete</label> -->
+                             <div class="task-description"> Finalize feature list of LMS &
+                                 Assign responsibilities</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="atharva-task2" onclick="toggleStatus(this)">
+                            <div class="task-description">Setup GitHub repo & folder structure ,Document project plan & timelines,Coordinate research efforts</div>
+
+                        </td>
+                        <td class="status-cell incomplete" data-id="atharva-task3" onclick="toggleStatus(this)">
+                            <div class="task-description">Monitor team progress,Code basic authentication/login module, Merge pull requests & manage GitHub,Maintain daily stand-up notes</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="atharva-task4" onclick="toggleStatus(this)">
+                            <div class="task-description">  Coordinate testing & feedback meetings</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="atharva-task5" onclick="toggleStatus(this)">
+                            <div class="task-description">Final project documentation,Presentation prep</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="member-name">👤 Atharv Nikam</td>
+                        <td class="status-cell incomplete" data-id="atharv-task1" onclick="toggleStatus(this)">
+                            <div class="task-description">Research LMS architecture, Explore existing open-source LMS platforms</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="atharv-task2" onclick="toggleStatus(this)">
+                            <div class="task-description">Identify key technical stacks (e.g., Django, React, Node.js, etc.)</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="atharv-task3" onclick="toggleStatus(this)">
+                            <div class="task-description">Build backend logic for course creation & enrollment, Develop API for student dashboard</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="atharv-task4" onclick="toggleStatus(this)">
+                            <div class="task-description">Perform unit testing on backend modules</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="atharv-task5" onclick="toggleStatus(this)">
+                            <div class="task-description">Fix bugs in logic</div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="member-name">👤 Harshwardhan Chate</td>
+                        <td class="status-cell incomplete" data-id="harsh-task1" onclick="toggleStatus(this)">
+                            <div class="task-description">Research LMS UI/UX best practices,Sketch initial wireframes</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="harsh-task2" onclick="toggleStatus(this)">
+                            <div class="task-description">Identify key user journeys (Admin, Teacher, Student)</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="harsh-task3" onclick="toggleStatus(this)">
+                            <div class="task-description"> Create frontend pages (Home, Login, Dashboard),Integrate UI with backend APIs</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="harsh-task4" onclick="toggleStatus(this)">
+                            <div class="task-description"> Conduct UI testing (mobile + desktop)</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="harsh-task5" onclick="toggleStatus(this)">
+                            <div class="task-description"> Fix design bugs</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="member-name">👤 Satyam Kumar</td>
+                        <td class="status-cell incomplete" data-id="satyam-task1" onclick="toggleStatus(this)">
+                            <div class="task-description">Research database design for LMS (tables for users, courses, quizzes, etc.)</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="satyam-task2" onclick="toggleStatus(this)">
+                            <div class="task-description">Plan backend API structure,Explore deployment platforms (Render, Vercel, Firebase)</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="satyam-task3" onclick="toggleStatus(this)">
+                            <div class="task-description">Implement backend database models,Handle video uploads & quiz data storage
+,Test APIs with Postman</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="satyam-task4" onclick="toggleStatus(this)">
+                            <div class="task-description">Set up final deployment (e.g., on Firebase/Render),Integrate database with live server</div>
+                        </td>
+                        <td class="status-cell incomplete" data-id="satyam-task5" onclick="toggleStatus(this)">
+                            <div class="task-description">Ensure security best practices in deployment</div>
+                        </td>
+                    </tr>
+
+                    
+                    <tr>
+                        <td class="group-header">
+                            Team Steve Jobs
+                            <div class="project-info">Project:Customer Relationship Management (CRM) Tool</div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="member-name leader-name">👑 Aditya Suryawanshi</td>
+                        <td class="status-cell incomplete" data-id="aditya-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="aditya-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="aditya-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="aditya-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="aditya-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="member-name">👤 Aditya Chavan(Group Leader)</td>
+                        <td class="status-cell incomplete" data-id="aditya-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="aditya-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="aditya-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="aditya-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="aditya-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>   
+                    </tr>
+                     <tr>
+                        <td class="member-name">👤 Gangana Lingshetti</td>
+                        <td class="status-cell incomplete" data-id="gangana-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="gangana-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="gangana-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="gangana-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="gangana-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>   
+                    </tr>
+                     <tr>
+                        <td class="member-name">👤 Viraj Kale</td>
+                        <td class="status-cell incomplete" data-id="viraj-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="viraj-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="viraj-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="viraj-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="viraj-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>   
+                    </tr>
+                    <tr>
+                        <td class="member-name">👤 Amey Akhare</td>
+                        <td class="status-cell incomplete" data-id="amey-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="amey-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="amey-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="amey-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="amey-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                    </tr>
+                    
+                     
+                <tr>
+                        <td class="group-header">
+                            Team Jeff Bezos
+                            <div class="project-info">Project:Digital Product Marketplace (eBooks, Templates, etc.)</div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="member-name leader-name">👑 Parth Joshi</td>
+                        <td class="status-cell incomplete" data-id="parth-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="parth-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="parth-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="parth-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="parth-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="member-name">👤 Sarthak Pawar(Group Leader)</td>
+                        <td class="status-cell incomplete" data-id="sarthak-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="sarthak-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="sarthak-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="sarthak-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="sarthak-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>   
+                    </tr>
+                     <tr>
+                        <td class="member-name">👤 Ishwari Kumbhar</td>
+                        <td class="status-cell incomplete" data-id="ishwari-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="ishwari-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="ishwari-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="ishwari-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="ishwari-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>   
+                    </tr>
+                     <tr>
+                        <td class="member-name">👤 Soham Agalave</td>
+                        <td class="status-cell incomplete" data-id="soham-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="soham-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="soham-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="soham-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="soham-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>   
+                    </tr>
+                     <tr>
+                        <td class="member-name">👤 Sahil Jirapure</td>
+                        <td class="status-cell incomplete" data-id="sahil-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="sahil-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="sahil-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="sahil-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="sahil-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>   
+                    </tr>
+                   
+
+                    <tr>
+                        <td class="group-header">
+                            Team Elon Musk
+                            <div class="project-info">Project:AI-Based Image Caption Generator  hard</div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="member-name leader-name">👑Jay Dhakad</td>
+                        <td class="status-cell incomplete" data-id="alok-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="alok-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="alok-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="alok-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="alok-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="member-name">👤 Tanishq Jhade(Group Leader)</td>
+                        <td class="status-cell incomplete" data-id="tanishq-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="tanishq-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="tanishq-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="tanishq-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="tanishq-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>   
+                    </tr>
+                     <tr>
+                        <td class="member-name">👤 Yuvraj Pawar</td>
+                        <td class="status-cell incomplete" data-id="yuvraj-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="yuvraj-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="yuvraj-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="yuvraj-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="yuvraj-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="member-name">👤 Shantanu Kshrisagar</td>
+                        <td class="status-cell incomplete" data-id="shantanu-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="shantanu-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="shantanu-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="shantanu-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="shantanu-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>   
+                    </tr>
+                      <tr>
+                        <td class="member-name">👤 Somaditya Biswe</td>
+                        <td class="status-cell incomplete" data-id="somaditya-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="somaditya-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="somaditya-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="somaditya-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="somaditya-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>   
+                    </tr>
+                    
+                    <tr>
+                        <td class="group-header">
+                            Team Larry Page
+                            <div class="project-info">Project:Ailexity page Development</div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="member-name leader-name">👑</td>
+                        <td class="status-cell incomplete" data-id="alok-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="alok-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="alok-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="alok-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="alok-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td class="member-name">👤 Sujal Karawade(Group Leader)</td>
+                        <td class="status-cell incomplete" data-id="sujal-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="sujal-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="sujal-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="sujal-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="sujal-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>   
+                    </tr>
+                    <tr>
+                        <td class="member-name">👤Tanmay Borhade</td>
+                        <td class="status-cell incomplete" data-id="tanmay-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="tanmay-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="tanmay-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="tanmay-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="tanmay-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="member-name">👤 Yash Grundewadi</td>
+                        <td class="status-cell incomplete" data-id="yash-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="yash-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="yash-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="yash-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="yash-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td class="member-name">👤Vinit Jagtap</td>
+                        <td class="status-cell incomplete" data-id="vinit-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="vinit-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="vinit-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="vinit-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="vinit-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td class="member-name">👤Atharva Salunke</td>
+                        <td class="status-cell incomplete" data-id="atharva-task1" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="atharva-task2" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="atharva-task3" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="atharva-task4" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                        <td class="status-cell incomplete" data-id="atharva-task5" onclick="toggleStatus(this)">
+                            <label class="checkbox-label">Not Complete</label>
+                        </td>
+                    </tr>
+                    
+                    
+                </tbody>
+                </table>
+                
+                <div class="legend">
+                    <h3>Status Legend</h3>
+                    <div class="legend-item legend-complete">Complete</div>
+                    <div class="legend-item legend-incomplete">Not Complete</div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let statusData = {};
+
+            function loadData() {
+                const savedData = localStorage.getItem('statusData');
+                if (savedData) {
+                    statusData = JSON.parse(savedData);
+                    updateAllStatuses();
+                }
+                updateStats();
+                updateLastSaved();
+            }
+
+            function saveData() {
+                localStorage.setItem('statusData', JSON.stringify(statusData));
+                updateLastSaved();
+            }
+
+            function toggleStatus(cell) {
+                const id = cell.getAttribute('data-id');
+                statusData[id] = !statusData[id];
+                
+                if (statusData[id]) {
+                    cell.classList.remove('incomplete');
+                    cell.classList.add('complete');
+                    cell.querySelector('.checkbox-label').textContent = 'Complete';
+                } else {
+                    cell.classList.remove('complete');
+                    cell.classList.add('incomplete');
+                    cell.querySelector('.checkbox-label').textContent = 'Not Complete';
+                }
+                
+                saveData();
+                updateStats();
+            }
+
+            function updateAllStatuses() {
+                document.querySelectorAll('.status-cell').forEach(cell => {
+                    const id = cell.getAttribute('data-id');
+                    if (statusData[id]) {
+                        cell.classList.remove('incomplete');
+                        cell.classList.add('complete');
+                        cell.querySelector('.checkbox-label').textContent = 'Complete';
+                    }
+                });
+            }
+
+            function updateStats() {
+                const totalCells = document.querySelectorAll('.status-cell').length;
+                const completedCells = Object.values(statusData).filter(value => value).length;
+                const completionRate = Math.round((completedCells / totalCells) * 100);
+
+                document.getElementById('totalTasks').textContent = totalCells;
+                document.getElementById('completedTasks').textContent = completedCells;
+                document.getElementById('completionRate').textContent = `${completionRate}%`;
+            }
+
+            function updateLastSaved() {
+                const date = new Date().toLocaleString();
+                document.getElementById('lastSaved').textContent = `Last saved: ${date}`;
+            }
+
+            function resetAllData() {
+                if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                    statusData = {};
+                    localStorage.removeItem('statusData');
+                    document.querySelectorAll('.status-cell').forEach(cell => {
+                        cell.classList.remove('complete');
+                        cell.classList.add('incomplete');
+                        cell.querySelector('.checkbox-label').textContent = 'Not Complete';
+                    });
+                    updateStats();
+                    updateLastSaved();
+                }
+            }
+
+            function exportData() {
+                const dataStr = JSON.stringify(statusData);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'status_tracker_export.json';
+                link.click();
+            }
+
+            function importData(input) {
+                const file = input.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            statusData = JSON.parse(e.target.result);
+                            localStorage.setItem('statusData', JSON.stringify(statusData));
+                            updateAllStatuses();
+                            updateStats();
+                            updateLastSaved();
+                            alert('Data imported successfully!');
+                        } catch (error) {
+                            alert('Error importing data. Please check the file format.');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+                input.value = '';
+            }
+
+            // Initialize on page load
+            document.addEventListener('DOMContentLoaded', loadData);
+        </script>
+    </body>
+    </html>
+
